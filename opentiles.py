@@ -68,7 +68,6 @@ def get_windows(desktop_num):
 	tile_list = []
 	for i in windows:
 		if i[11:13] == " " + desktop_num:
-#			print i
 			tile_list.append(i[:10])
 	return tile_list
 

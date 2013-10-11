@@ -32,6 +32,10 @@ Dimensions = Dimensions.split(' ')
 res_width = int(Dimensions[0])
 res_height = int(Dimensions[1])
 
+if os.path.exists(history) == False:
+	f = open(history,'w')
+	f.close()
+
 def print_usage():
 	print "cb-opentiles: usage:"
 	print "  --help		show this message and exit"
@@ -50,7 +54,6 @@ def window_id():
 	return str(ID)+'-'+str(PID)
 
 def windows_store(windows):
-	#s = windows #+'\n'
 	os.system('rm /tmp/cb-opentiles-'+str(os.getuid()))
 	for i in windows:
 		s = i + ' \n'

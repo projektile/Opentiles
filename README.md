@@ -7,4 +7,4 @@ It will compensate for conky, however I'm having trouble making it compensate fo
 Currently tiles in two ways; no rotating feature has yet been implemented. Works best when mapped to two keys.
 you can see how it works here: 
 
-<a href="http://mkerala.com/u/?pm=S874" title="opentiles" ><img src="http://mkerala.com/u/image.php?dm=S874" alt="opentiles" /></a>
+<a href="http://mkerala.com/u/?pm=059E" title="final" ><img src="http://mkerala.com/u/image.php?dm=059E" alt="final" /></a>

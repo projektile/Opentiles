@@ -23,19 +23,20 @@
 from subprocess import Popen, PIPE, STDOUT
 import sys, os, subprocess, re, datetime
 
+history = '/tmp/cb-opentiles-'+str(os.getuid())
+
 p = Popen(['xdotool','getdisplaygeometry'], stdout=PIPE, stderr=STDOUT)
 Dimensions = p.communicate()
 Dimensions = Dimensions[0].replace('\n', '')
 Dimensions = Dimensions.split(' ')
 res_width = int(Dimensions[0])
 res_height = int(Dimensions[1])
-windows = {}
 
 def print_usage():
 	print "cb-opentiles: usage:"
 	print "  --help		show this message and exit"
-	print "  --up       attempt to tile windows evenly"
-	print "  --down     attempt to tile more windows on the right"
+	print "  --left     tile windows with focus on the left"
+	print "  --down     tile windows with focus on the right"
 	print ""
 	exit()
 
@@ -47,6 +48,39 @@ def window_id():
 	PID = p.communicate()
 	PID = int(PID[0])
 	return str(ID)+'-'+str(PID)
+
+def windows_store(windows):
+	#s = windows #+'\n'
+	os.system('rm /tmp/cb-opentiles-'+str(os.getuid()))
+	for i in windows:
+		s = i + ' \n'
+		f = open(history,'a')
+		f.write(s)
+	f.close()
+
+def history_lookup():
+	f = open(history,'r')
+	i = 0
+	for line in f:
+		z = str(line[:10])
+		if z in windows_arr:
+			i = i + 1
+		else:
+			return False
+	f.close()
+	if i == len(windows_arr):
+		return True
+	else:
+		return False
+
+def windows_assign():
+	f = open(history,'r')
+	loaded_list = []
+	for line in f:
+		z = str(line[:10])
+		loaded_list.append(z)
+	f.close()
+	return loaded_list
 
 def get_desktop_number():
 	p = Popen(['wmctrl', '-d'], stdout=PIPE, stderr=STDOUT)
@@ -79,9 +113,9 @@ def tile_windows(windows, col):
 		if col == 1:
 			x = str(int(15))
 		elif col == 2:
-			x = str(int(res_width/2+15))#*.90
+			x = str(int(res_width/2+10))
 		y = str(int(n*frac+30))
-		width = str(int(res_width/2*.98))#*.858
+		width = str(int(res_width/2*.97))
 		height = str(frac - 15)
 		os.system("wmctrl -r :ACTIVE: -e 1,"+x+","+y+","+width+","+height)
 		n = n + 1
@@ -102,24 +136,23 @@ def factor_inactive(dimension):
 		if dimension == "x":
 			if x < y:
 				return x
-			else:
-				continue
 		if dimension =="y":
 			if x > y:
 				return y
-			else:
-				continue
 	return 0
 
+def rotate(list, x):
+	return list[-x:] + list[:-x]
+
 def main():
-	if "--up" in sys.argv:
-		L_windows = num_windows[:(len(num_windows)/2)]
-		R_windows = num_windows[(len(num_windows)/2):]
+	if "--left" in sys.argv:
+		L_windows = windows_arr[:(len(windows_arr)/2)]
+		R_windows = windows_arr[(len(windows_arr)/2):]
 		tile_windows(L_windows, 1)
 		tile_windows(R_windows, 2)
-	elif "--down" in sys.argv:
-		L_windows = num_windows[:(len(num_windows)/2)+1]
-		R_windows = num_windows[(len(num_windows)/2)+1:]
+	elif "--right" in sys.argv:
+		L_windows = windows_arr[:(len(windows_arr)/2)+1]
+		R_windows = windows_arr[(len(windows_arr)/2)+1:]
 		tile_windows(L_windows, 1)
 		tile_windows(R_windows, 2)
 	else:
@@ -129,11 +162,16 @@ x_object = int(factor_inactive("x"))
 y_object = int(factor_inactive("y")*1.5)
 res_width = res_width - x_object
 res_height = res_height - y_object
-
 active_desktop = get_desktop_number()
-num_windows = get_windows(active_desktop)
+windows_arr = get_windows(active_desktop)
+
 ID = window_id()
 
+if history_lookup():
+	windows_arr = windows_assign()
+	windows_arr = rotate(windows_arr, 1)
+
 main()
+windows_store(windows_arr)
 
 os.system("xdotool windowactivate " + ID)

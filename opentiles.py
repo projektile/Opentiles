@@ -1,8 +1,8 @@
 #!/usr/bin/env python                                                                                                                                                                                                              
 # cb-opentiles:
-# A script for tiling window management with Openbox.
+# A script to allow for tiling window management with Openbox.
 # Written for CrunchBang Linux <http://crunchbang.org/>
-# by Projektile
+# by projektile
 # ----------------------------------------------------------------------
 # License:
 #            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
@@ -93,7 +93,6 @@ def get_desktop_number():
 	while i < len(desktop):
 		if desktop[i] == "*":
 			return desktop[i-3]
-			break
 		else:
 			i = i + 1
 
@@ -118,7 +117,7 @@ def tile_windows(windows, col):
 		elif col == 2:
 			x = str(int(res_width/2+10))
 		y = str(int(n*frac+30))
-		width = str(int(res_width/2*.97))
+		width = str(int(res_width/2*.975))
 		height = str(frac - 15)
 		os.system("wmctrl -r :ACTIVE: -e 1,"+x+","+y+","+width+","+height)
 		n = n + 1

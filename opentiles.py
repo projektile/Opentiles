@@ -2,13 +2,13 @@
 # cb-opentiles:
 # A script for tiling window management with Openbox.
 # Written for CrunchBang Linux <http://crunchbang.org/>
-# by Tyler Pollard
+# by Projektile
 # ----------------------------------------------------------------------
 # License:
 #            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
 #                    Version 2, October 2013
 #
-# Copyright (C) 2013 Tyler Pollard <https://github.com/projektile>
+# Copyright (C) 2013 projektile <https://github.com/projektile>
 #
 # Everyone is permitted to copy and distribute verbatim or modified
 # copies of this license document, and changing it is allowed as long

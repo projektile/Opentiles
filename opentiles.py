@@ -17,7 +17,7 @@
 #            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
 #   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
 #
-#  0. You just DO WHAT THE FUCK YOU WANT TO. 
+#  0. You just DO WHAT THE FUCK YOU WANT TO.
 # ----------------------------------------------------------------------
 
 from subprocess import Popen, PIPE, STDOUT
@@ -107,16 +107,53 @@ def get_windows(desktop_num):
 			tile_list.append(i[:10])
 	return tile_list
 
+def panel_orient(dimension):
+	p = Popen(['wmctrl', '-l', '-G'], stdout=PIPE, stderr=STDOUT)
+	windows = p.communicate()
+	windows = windows[0].replace('\n', ' \n')
+	windows = windows.split('\n')
+	panel_list = []
+	for i in windows:
+		if i[11:13] == "-1":
+			panel_list.append(i[14:32])
+	for i in panel_list:
+		x = int(i[10:14].replace(' ',''))
+		y = int(i[14:18].replace(' ',''))
+		x_coord = int(i[:4].replace(' ',''))
+		y_coord = int(i[4:8].replace(' ',''))
+		if dimension == "x":
+			if x < y:
+				if x_coord > res_width/2:
+					return True
+				else:
+					return False
+		if dimension =="y":
+			if x > y:
+				if y_coord > res_height/2:
+					return True
+				else:
+					return False
+	return True
+
 def tile_windows(windows, col):
 	n = 0
 	for i in windows:
 		os.system("xdotool windowactivate " + i)
 		frac = int(res_height/len(windows))
-		if col == 1:
-			x = str(int(15))
-		elif col == 2:
-			x = str(int(res_width/2+10))
-		y = str(int(n*frac+30))
+		if panel_orient("x") == True:
+			if col == 1:
+				x = str(int(13))
+			elif col == 2:
+				x = str(int(res_width/2+8))
+		else:
+			if col == 1:
+				x = str(int(8)+x_object)
+			elif col == 2:
+				x = str(int(res_width/2+3)+x_object)
+		if panel_orient("y") == False:
+			y = str(int(n*frac+y_object))
+		else:
+			y = str(int(n*frac+(y_object*.5)))
 		width = str(int(res_width/2*.975))
 		height = str(frac - 15)
 		os.system("wmctrl -r :ACTIVE: -e 1,"+x+","+y+","+width+","+height)
@@ -130,7 +167,6 @@ def factor_inactive(dimension):
 	inactive_list = []
 	for i in windows:
 		if i[11:13] == "-1":
-			print i
 			inactive_list.append(i[24:32])
 	for i in inactive_list:
 		x = int(i[:4].replace(' ',''))
@@ -162,6 +198,7 @@ def main():
 
 x_object = int(factor_inactive("x"))
 y_object = int(factor_inactive("y")*1.5)
+#print (y_object)
 res_width = res_width - x_object
 res_height = res_height - y_object
 active_desktop = get_desktop_number()

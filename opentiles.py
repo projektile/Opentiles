@@ -39,8 +39,8 @@ if os.path.exists(history) == False:
 def print_usage():
 	print "cb-opentiles: usage:"
 	print "  --help		show this message and exit"
-	print "  --left		tile 2 window columns"
-	print "  --right	tile 3 window columns"
+	print "  --left     tile two window columns"
+	print "  --down     tile three window columns"
 	print ""
 	exit()
 
@@ -184,7 +184,10 @@ def rotate(list, x):
 
 def tile_method():
 	if "--left" in sys.argv:
-		return 2
+		if len(windows_arr) == 2:
+			return 1
+		else:
+			return 2
 	elif "--right" in sys.argv:
 		return 3
 	else:

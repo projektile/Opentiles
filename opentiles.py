@@ -39,8 +39,8 @@ if os.path.exists(history) == False:
 def print_usage():
 	print "cb-opentiles: usage:"
 	print "  --help		show this message and exit"
-	print "  --left     tile windows with focus on the left"
-	print "  --down     tile windows with focus on the right"
+	print "  --left		tile 2 window columns"
+	print "  --right	tile 3 window columns"
 	print ""
 	exit()
 
@@ -141,20 +141,14 @@ def tile_windows(windows, col):
 		os.system("xdotool windowactivate " + i)
 		frac = int(res_height/len(windows))
 		if panel_orient("x") == True:
-			if col == 1:
-				x = str(int(13))
-			elif col == 2:
-				x = str(int(res_width/2+8))
+			x = str(int(res_width/columns*(col-1)+12))
 		else:
-			if col == 1:
-				x = str(int(8)+x_object)
-			elif col == 2:
-				x = str(int(res_width/2+3)+x_object)
+			x = str(int(res_width/columns*(col-1))+x_object)
 		if panel_orient("y") == False:
 			y = str(int(n*frac+y_object))
 		else:
 			y = str(int(n*frac+(y_object*.5)))
-		width = str(int(res_width/2*.975))
+		width = str(int((res_width/columns)-15))
 		height = str(frac - 15)
 		os.system("wmctrl -r :ACTIVE: -e 1,"+x+","+y+","+width+","+height)
 		n = n + 1
@@ -179,30 +173,42 @@ def factor_inactive(dimension):
 				return y
 	return 0
 
+def get_columns(num):
+	columns = len(windows_arr)/num
+	if len(windows_arr)%num > 0:
+		columns = columns = columns + 1
+	return columns
+
 def rotate(list, x):
 	return list[-x:] + list[:-x]
 
-def main():
+def tile_method():
 	if "--left" in sys.argv:
-		L_windows = windows_arr[:(len(windows_arr)/2)]
-		R_windows = windows_arr[(len(windows_arr)/2):]
-		tile_windows(L_windows, 1)
-		tile_windows(R_windows, 2)
+		return 2
 	elif "--right" in sys.argv:
-		L_windows = windows_arr[:(len(windows_arr)/2)+1]
-		R_windows = windows_arr[(len(windows_arr)/2)+1:]
-		tile_windows(L_windows, 1)
-		tile_windows(R_windows, 2)
+		return 3
 	else:
 		print_usage()
 
-x_object = int(factor_inactive("x"))
+def main():
+	window_sets = []*columns
+	x = 0
+	while x < columns:
+		window_sets.append(windows_arr[x*method:((x+1)*method)])
+		tile_windows(window_sets[x], x+1)
+		x+=1
+
+x_object = int(factor_inactive("x")*1.05)
 y_object = int(factor_inactive("y")*1.5)
-#print (y_object)
+
 res_width = res_width - x_object
 res_height = res_height - y_object
 active_desktop = get_desktop_number()
 windows_arr = get_windows(active_desktop)
+
+method = int(tile_method())
+columns = get_columns(method)
+print columns
 
 ID = window_id()
 

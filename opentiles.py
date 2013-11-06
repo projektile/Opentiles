@@ -39,8 +39,8 @@ if os.path.exists(history) == False:
 def print_usage():
 	print "cb-opentiles: usage:"
 	print "  --help		show this message and exit"
-	print "  --left     tile two window columns"
-	print "  --down     tile three window columns"
+	print "  --left		tile two window columns"
+	print "  --right	tile three window columns"
 	print ""
 	exit()
 

@@ -39,8 +39,8 @@ if os.path.exists(history) == False:
 def print_usage():
 	print "cb-opentiles: usage:"
 	print "  --help		show this message and exit"
-	print "  --left		tile two window columns"
-	print "  --right	tile three window columns"
+	print "  --left     tile two window columns"
+	print "  --right     tile three window columns"
 	print ""
 	exit()
 
@@ -140,14 +140,14 @@ def tile_windows(windows, col):
 	for i in windows:
 		os.system("xdotool windowactivate " + i)
 		frac = int(res_height/len(windows))
-		if panel_orient("x") == True:
+		if panel_orient("x"):
 			x = str(int(res_width/columns*(col-1)+12))
 		else:
 			x = str(int(res_width/columns*(col-1))+x_object)
-		if panel_orient("y") == False:
-			y = str(int(n*frac+y_object))
-		else:
+		if panel_orient("y"):
 			y = str(int(n*frac+(y_object*.5)))
+		else:
+			y = str(int(n*frac+y_object))
 		width = str(int((res_width/columns)-15))
 		height = str(frac - 15)
 		os.system("wmctrl -r :ACTIVE: -e 1,"+x+","+y+","+width+","+height)

@@ -7,4 +7,4 @@ It will compensate for size and location of conky and your task panel (assuming 
 Currently tiles in two unique ways and will rotate the when the same windows are tiled repeatedly. Works best when mapped to two keys.
 You can see how it works here: 
 
-<a href="http://mkerala.com/u/?pt=RMIH" title="Tiling with openbox" ><img src="http://mkerala.com/u/image.php?dt=RMIH" alt="Tiling with openbox" /></a>
+<a href="http://mkerala.com/u/?pm=RMIH" title="Tiling with openbox" ><img src="http://mkerala.com/u/image.php?dm=RMIH" alt="Tiling with openbox" /></a>

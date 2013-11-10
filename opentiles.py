@@ -21,7 +21,7 @@
 # ----------------------------------------------------------------------
 
 from subprocess import Popen, PIPE, STDOUT
-import sys, os, subprocess, re, datetime
+import sys, os, subprocess, re
 
 history = '/tmp/cb-opentiles-'+str(os.getuid())
 
@@ -201,8 +201,8 @@ def main():
 		tile_windows(window_sets[x], x+1)
 		x+=1
 
-x_object = int(factor_inactive("x")*1.05)
-y_object = int(factor_inactive("y")*1.5)
+x_object = int(factor_inactive("x")+5)
+y_object = int(factor_inactive("y")+10)
 
 res_width = res_width - x_object
 res_height = res_height - y_object

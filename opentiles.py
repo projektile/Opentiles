@@ -221,7 +221,6 @@ def main():
 	windows_arr = get_windows(active_desktop)
 	method = int(tile_method())
 	columns = get_columns(method)
-	print columns
 	ID = window_id()
 	if history_lookup():
 		windows_arr = windows_assign()

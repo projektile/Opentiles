@@ -1,4 +1,4 @@
-#!/usr/bin/env python                                                                                                                                                                                                              
+#!/usr/bin/env python
 # cb-opentiles:
 # A script to allow for tiling window management with Openbox.
 # Written for CrunchBang Linux <http://crunchbang.org/>
@@ -32,15 +32,25 @@ Dimensions = Dimensions.split(' ')
 res_width = int(Dimensions[0])
 res_height = int(Dimensions[1])
 
+active_desktop = 0
+windows_arr = []
+method = 0
+columns = 0
+ID = 0
+
+useless_gap = 10
+x_object = 0
+y_object = 0
+
 if os.path.exists(history) == False:
 	f = open(history,'w')
 	f.close()
 
 def print_usage():
 	print "cb-opentiles: usage:"
-	print "  --help		show this message and exit"
+	print "  --help     show this message and exit"
 	print "  --left     tile two window columns"
-	print "  --right     tile three window columns"
+	print "  --right    tile three window columns"
 	print ""
 	exit()
 
@@ -149,7 +159,7 @@ def tile_windows(windows, col):
 		else:
 			y = str(int(n*frac+y_object))
 		width = str(int((res_width/columns)-15))
-		height = str(frac - 15)
+		height = str(frac - 12)
 		os.system("wmctrl -r :ACTIVE: -e 1,"+x+","+y+","+width+","+height)
 		n = n + 1
 
@@ -194,32 +204,35 @@ def tile_method():
 		print_usage()
 
 def main():
+	global x_object
+	global y_object
+	global res_width
+	global res_height
+	global active_desktop
+	global windows_arr
+	global method
+	global columns
+	global ID
+	x_object = int(factor_inactive("x")+useless_gap/2)
+	y_object = int(factor_inactive("y")+useless_gap)
+	res_width = res_width - x_object
+	res_height = res_height - y_object
+	active_desktop = get_desktop_number()
+	windows_arr = get_windows(active_desktop)
+	method = int(tile_method())
+	columns = get_columns(method)
+	print columns
+	ID = window_id()
+	if history_lookup():
+		windows_arr = windows_assign()
+		windows_arr = rotate(windows_arr, 1)
 	window_sets = []*columns
 	x = 0
 	while x < columns:
 		window_sets.append(windows_arr[x*method:((x+1)*method)])
 		tile_windows(window_sets[x], x+1)
 		x+=1
-
-x_object = int(factor_inactive("x")+5)
-y_object = int(factor_inactive("y")+10)
-
-res_width = res_width - x_object
-res_height = res_height - y_object
-active_desktop = get_desktop_number()
-windows_arr = get_windows(active_desktop)
-
-method = int(tile_method())
-columns = get_columns(method)
-print columns
-
-ID = window_id()
-
-if history_lookup():
-	windows_arr = windows_assign()
-	windows_arr = rotate(windows_arr, 1)
+	windows_store(windows_arr)
+	os.system("xdotool windowactivate " + ID)
 
 main()
-windows_store(windows_arr)
-
-os.system("xdotool windowactivate " + ID)

@@ -38,7 +38,7 @@ method = 0
 columns = 0
 ID = 0
 
-useless_gap = 10
+useless_gap = 16
 x_object = 0
 y_object = 0
 
@@ -117,7 +117,7 @@ def get_windows(desktop_num):
 			tile_list.append(i[:10])
 	return tile_list
 
-def panel_orient(dimension):
+def panel_farside(dimension):
 	p = Popen(['wmctrl', '-l', '-G'], stdout=PIPE, stderr=STDOUT)
 	windows = p.communicate()
 	windows = windows[0].replace('\n', ' \n')
@@ -145,22 +145,27 @@ def panel_orient(dimension):
 					return False
 	return True
 
+# This needs to be cleaned up like shit.
+# make useless gap work like it should plz.
 def tile_windows(windows, col):
 	n = 0
 	for i in windows:
-		os.system("xdotool windowactivate " + i)
-		frac = int(res_height/len(windows))
-		if panel_orient("x"):
-			x = str(int(res_width/columns*(col-1)+12))
+		h_frac = int(res_width/columns)
+		v_frac = int(res_height/len(windows))
+		if panel_farside("x"):
+			x = str(int(h_frac*(col-1)+useless_gap))
 		else:
-			x = str(int(res_width/columns*(col-1))+x_object)
-		if panel_orient("y"):
-			y = str(int(n*frac+(y_object*.5)))
+			x = str(int(h_frac*(col-1))+x_object+useless_gap)
+		if panel_farside("y"):
+			y = str(int(n*v_frac+useless_gap))
 		else:
-			y = str(int(n*frac+y_object))
-		width = str(int((res_width/columns)-15))
-		height = str(frac - 12)
-		os.system("wmctrl -r :ACTIVE: -e 1,"+x+","+y+","+width+","+height)
+			y = str(int(n*v_frac+y_object))
+			
+		width = str(int((res_width/columns)-useless_gap*1.5)) #ug*1.5
+		height = str(v_frac - useless_gap)  #ug*1.5
+		dim_string = x+","+y+","+width+","+height
+		os.system("xdotool windowactivate "+i)
+		os.system("wmctrl -r :ACTIVE: -e 1,"+dim_string)
 		n = n + 1
 
 def factor_inactive(dimension):

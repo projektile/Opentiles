@@ -38,7 +38,7 @@ method = 0
 columns = 0
 ID = 0
 
-useless_gap = 16
+useless_gap = 18
 x_object = 0
 y_object = 0
 
@@ -145,8 +145,9 @@ def panel_farside(dimension):
 					return False
 	return True
 
-# This needs to be cleaned up like shit.
-# make useless gap work like it should plz.
+# This function actually does the tiling
+# toggle useless_gap*1.5 to width and height
+# in order to deal with term gaps
 def tile_windows(windows, col):
 	n = 0
 	for i in windows:
@@ -161,8 +162,8 @@ def tile_windows(windows, col):
 		else:
 			y = str(int(n*v_frac+y_object))
 			
-		width = str(int((res_width/columns)-useless_gap*1.5)) #ug*1.5
-		height = str(v_frac - useless_gap)  #ug*1.5
+		width = str(int((res_width/columns)-useless_gap))
+		height = str(v_frac - useless_gap)
 		dim_string = x+","+y+","+width+","+height
 		os.system("xdotool windowactivate "+i)
 		os.system("wmctrl -r :ACTIVE: -e 1,"+dim_string)

@@ -162,7 +162,7 @@ def tile_windows(windows, col):
 		else:
 			y = str(int(n*v_frac+y_object))
 			
-		width = str(int((res_width/columns)-useless_gap))
+		width = str(int((res_width/columns)-useless_gap*1.5))
 		height = str(v_frac - useless_gap)
 		dim_string = x+","+y+","+width+","+height
 		os.system("xdotool windowactivate "+i)

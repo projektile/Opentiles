@@ -184,7 +184,7 @@ def factor_inactive(dimension):
 def get_columns(num):
 	columns = len(windows_arr)/num
 	if len(windows_arr)%num > 0:
-		columns = columns = columns + 1
+		columns = columns + 1
 	return columns
 
 def rotate(list, x):

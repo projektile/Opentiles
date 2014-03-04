@@ -46,6 +46,7 @@ while i < len(desktop):
 history = '/tmp/opentiles-'+str(os.getuid())+'-'+str(active_desktop)                             #trying this
 
 windows_arr = []
+cmd_arr = []
 method = 0
 columns = 2
 ID = 0
@@ -163,6 +164,7 @@ def panel_farside(dimension):
 def tile_windows(windows, col):
 	n = 0
 	for i in windows:
+		global cmd_arr
 		h_frac = int((res_width/columns)*(col-1)+(useless_gap*.5))
 		v_frac = int((n*(res_height/len(windows)))+(useless_gap*.5))
 		if panel_farside("x")==False:
@@ -177,8 +179,14 @@ def tile_windows(windows, col):
 			width -= x_offset
 			h_frac += x_offset
 		dim_string = str(h_frac)+","+str(v_frac)+","+str(width)+","+str(height)
+		cmd_arr.append(dim_string)
+		n = n + 1
+
+def final_tile(windows):
+	n = 0
+	for i in windows:
 		os.system("xdotool windowactivate "+i)
-		os.system("wmctrl -r :ACTIVE: -e 1,"+dim_string)
+		os.system("wmctrl -r :ACTIVE: -e 1,"+cmd_arr[n])
 		n = n + 1
 
 def factor_inactive(dimension):
@@ -210,7 +218,7 @@ def set_offset(windows_arr):                              #print_usage() needs t
 	elif "--rotate" not in sys.argv:
 		print_usage()
 
-def rotate(list, x):
+def rotate(list, x):                                  # to be deprecated in exchange for swap!
 	return list[-x:] + list[:-x]
 
 def sort_windows(windows_arr):
@@ -248,6 +256,7 @@ def main():
 			windows_arr = rotate(windows_arr, 1)
 	set_offset(windows_arr)
 	sort_windows(windows_arr)
+	final_tile(windows_arr)
 	windows_store(windows_arr)
 	os.system("xdotool windowactivate " + str(ID))
 

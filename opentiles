@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # opentiles:
 # A script to allow for tiling window management with Openbox.
-# Written for CrunchBang Linux <http://crunchbang.org/>
 # by projektile
 # ----------------------------------------------------------------------
 # License:

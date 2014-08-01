@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# cb-opentiles:
+# opentiles:
 # A script to allow for tiling window management with Openbox.
 # Written for CrunchBang Linux <http://crunchbang.org/>
 # by projektile
@@ -47,7 +47,7 @@ if os.path.exists(history) == False:
 	f.close()
 
 def print_usage():
-	print "cb-opentiles: usage:"
+	print "opentiles: usage:"
 	print "  --help     show this message and exit"
 	print "  --left     tile two window columns"
 	print "  --right    tile three window columns"
